@@ -1,0 +1,6 @@
+data/
+config_old/
+.vscode/
+outputs/
+src (Copy)/
+__pycache__/

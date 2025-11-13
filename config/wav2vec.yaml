@@ -1,0 +1,69 @@
+hydra:
+  run:
+    dir: outputs/Wav2Vec_train
+
+
+model:
+  name: Wav2Vec2
+  num_classes: 2 # lamantin or pas_lamantin
+  
+
+data:
+  
+  path_dir: data/training_set/extraits_unique_1min
+  path_csv : data/training_set/training_set_all_deep_corrected.csv
+  val_sites : [66, 3, 10, 60, 59, 61]
+  pred_dir : data/test_set/extraits_1min
+  classes : ['pas_lamantin', 'lamantin']
+  batch_size: 8  #######
+  num_workers: 4
+  sample_rate: 44100    #######
+  window: 10    #######
+  hop_size: 5    
+  split_ratio: 0.8    # ######
+  mixup: 0.6
+
+optimizer:
+  name: Adam
+  params:
+
+  
+    lr: 1e-5  #######
+
+    
+    weight_decay: 1e-4
+
+trainer:
+  _target_: lightning.pytorch.Trainer
+  
+  max_epochs: 100 #######
+  
+  accelerator: gpu
+  devices: 1
+  enable_checkpointing: true
+  log_every_n_steps: 10
+
+  logger:
+    _target_: lightning.pytorch.loggers.TensorBoardLogger
+    save_dir: ${hydra:run.dir}
+    name: "tensorboard_logs"
+
+  callbacks:
+    - _target_: lightning.pytorch.callbacks.ModelCheckpoint
+      monitor: val_acc
+      mode: max
+      save_top_k: 1
+      filename: "best"
+      dirpath: "${hydra:run.dir}/checkpoints/"
+    - _target_: lightning.pytorch.callbacks.EarlyStopping
+      monitor: val_acc
+      patience: 30
+      mode: max
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  patience: 15
+  factor: 0.2
+  eps: 1e-9
+
+seed: 111

@@ -1,0 +1,24 @@
+hydra:
+  run:
+    dir: outputs/resnet_plot
+
+model:
+  name: AudioResnet50
+  num_classes: 2 # lamantin or pas_lamantin
+  
+
+data:
+  
+  path_dir: /marbec-data/manatee_sound/data/training_set/extraits_unique_1min
+  path_csv : /marbec-data/manatee_sound/data/training_set/training_set_all_deep__corrected.csv
+  val_sites : [66, 3, 10, 60, 59, 61]
+  pred_dir : /marbec-data/manatee_sound/data/test_set/extraits_1min
+  classes : ['pas_lamantin', 'lamantin']
+  batch_size: 8   #######
+  num_workers: 4
+  sample_rate: 44100    #######
+  window: 10    #######
+  hop_size: 5    
+  split_ratio: 0.8    # ######
+
+seed: 111
