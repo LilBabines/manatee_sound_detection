@@ -1,10 +1,11 @@
 hydra:
   run:
-    dir: outputs/resnet_train_corrected_mean_std_compute
+    dir: outputs/resnet_train_no_pt_with_mixup_lr3
 
 model:
   name: AudioResnet50
   num_classes: 2 # lamantin or pas_lamantin
+  pre_trained : False
   
 
 data:
@@ -15,20 +16,20 @@ data:
   pred_dir : data/test_set/extraits_1min
   classes : ['pas_lamantin', 'lamantin']
   batch_size: 32   #######
-  num_workers: 4
+  num_workers: 8
   sample_rate: 44100    #######
   window: 10    #######
   hop_size: 5    
   split_ratio: 0.8    # ######
   mixup: 0.6
-  img_size : [224, 448]
+  img_size : [224, 224]
 
 optimizer:
-  name: Adam
+  name: AdamW
   params:
 
   
-    lr: 1e-5  #######
+    lr: 1e-3  #######
 
     
     weight_decay: 1e-4
@@ -36,12 +37,13 @@ optimizer:
 trainer:
   _target_: lightning.pytorch.Trainer
   
-  max_epochs: 100 #######
+  max_epochs: 500 #######
   
   accelerator: gpu
   devices: 1
   enable_checkpointing: true
   log_every_n_steps: 10
+  
 
   logger:
     _target_: lightning.pytorch.loggers.TensorBoardLogger

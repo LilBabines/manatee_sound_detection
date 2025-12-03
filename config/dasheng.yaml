@@ -1,6 +1,6 @@
 hydra:
   run:
-    dir: outputs/dasheng_test_back_to_bisness
+    dir: outputs/dasheng_no_pt
 
 model:
   name: Dasheng
@@ -11,6 +11,7 @@ model:
       # sample_rate : 44100
       
   num_classes: 2 # lamantin or pas_lamantin
+  pre_trained : False
   
   
 
@@ -34,15 +35,15 @@ optimizer:
   params:
 
   
-    lr: 1e-5  #######
+    lr: 1e-4  #######
 
     
-    weight_decay: 1e-4
+    weight_decay: 1e-5
 
 trainer:
   _target_: lightning.pytorch.Trainer
   
-  max_epochs: 100 #######
+  max_epochs: 500 #######
   
   accelerator: gpu
   devices: 1
@@ -63,7 +64,7 @@ trainer:
       dirpath: "${hydra:run.dir}/checkpoints/"
     - _target_: lightning.pytorch.callbacks.EarlyStopping
       monitor: val_acc
-      patience: 30
+      patience: 50
       mode: max
 
 scheduler:

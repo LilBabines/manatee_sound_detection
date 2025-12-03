@@ -10,12 +10,14 @@ import torchaudio
 from typing import Mapping, Any
 import dasheng
 
+import nvtx
+
+
 class BaseModule(LightningModule):
     def __init__(self, cfg: DictConfig):
         super().__init__()
         self.cfg = cfg
         self.classes_name = cfg.data.classes
-        
 
     def forward(self, x: Tensor) -> Tensor:
         raise NotImplementedError
@@ -113,7 +115,7 @@ class BaseModule(LightningModule):
 class AudioResnet50(BaseModule):
     def __init__(self, cfg: DictConfig):
         super().__init__(cfg)
-        self.resnet = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
+        self.resnet = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1 if cfg.model.pre_trained else None)
         self.resnet.fc = nn.Linear(self.resnet.fc.in_features, cfg.model.num_classes)
 
     # def load_state_dict(self, state_dict: Mapping[str, Any], assign: bool = False):
@@ -156,10 +158,18 @@ class Dasheng(BaseModule):
             kwargs = cfg.model.kwargs
             
         if cfg.model.type =="base" :
+
+            if cfg.model.pre_trained :
             
-            self.dashengmodel = dasheng.dasheng_base(**kwargs)
-        elif cfg.model.type =="06B" :
-            self.dashengmodel = dasheng.dasheng_06B(**kwargs)
+                self.dashengmodel = dasheng.dasheng_base(**kwargs)
+
+            else :
+                kwargs["embed_dim"] = 768
+                kwargs["depth"] = 12
+                kwargs["num_heads"] = 12
+                self.dashengmodel = dasheng.pretrained.pretrained.Dasheng(**kwargs)
+        else :
+            raise ValueError(f"Unknown Dasheng model type: {cfg.model.type}, only 'base' is supported currently.")
 
         # if cfg.model.pre_trained :
         #     self.load_state_from_dasheng(cfg.model.type)

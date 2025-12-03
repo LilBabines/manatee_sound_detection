@@ -12,6 +12,7 @@ import numpy as np
 from torchcodec.decoders import AudioDecoder
 import torch.nn.functional as F
 
+import nvtx
 
 def load_slice_with_torchcodec(audio_path: str, loc: float, window: float):
     """
@@ -71,7 +72,7 @@ class AudioDataset(Dataset):
         self.sr = cfg.data.sample_rate
         self.window = cfg.data.window
         self.length = int(self.window * self.sr)
-        # self.img_size = cfg.data.img_size
+        
 
         # self.center_crop = cfg.data.center_crop
         # self.crop_size = int(self.center_crop*self.sr) if self.center_crop else 0
@@ -87,7 +88,7 @@ class AudioDataset(Dataset):
                     # T_audio.FrequencyMasking(freq_mask_param=15),
                     # T_audio.TimeMasking(time_mask_param=15,p=0.2),
                     
-                    # T.Resize(self.img_size),
+                    T.Resize(cfg.data.img_size),
                     T.Normalize(mean=[-53.4768], std=[9.2067]),
                     Repeat3Channels(),  # type: ignore
                     
@@ -479,7 +480,7 @@ class AudioDataModule(LightningDataModule):
         
         return DataLoader(self.predict_dataset,batch_size=self.batch_size,shuffle=False, num_workers=self.num_workers,persistent_workers=bool(self.num_workers))
     
-
+    # @nvtx.annotate("on_after_batch_transfer")
     def on_after_batch_transfer(self, batch, dataloader_idx):
 
         if self.trainer.training and torch.rand(()) < self.mixup:
@@ -518,18 +519,18 @@ class BenchMarkDataModule(LightningDataModule):
 
     def prepare_data(self):
         pass
-        # for class_name in self.classes:
-        #     # Create directories for each class if they do not exist
-        #     class_dir = f"{self.path_dir}/{class_name}"
+    #     for class_name in self.classes:
+    #         # Create directories for each class if they do not exist
+    #         class_dir = f"{self.path_dir}/{class_name}"
 
-        #     if not os.path.exists(class_dir):
-        #         raise ValueError(f"Class directory {class_dir} does not exist.")
+    #         if not os.path.exists(class_dir):
+    #             raise ValueError(f"Class directory {class_dir} does not exist.")
 
-        #     n_samples = len(glob.glob(f"{class_dir}/*.wav"))
-        #     if n_samples == 0:
-        #         raise ValueError(f"No audio .wav files found in {class_dir}. Please check the dataset path.")
-        #     else:
-        #         print(f"Class {class_name} : {n_samples} samples found.")
+    #         n_samples = len(glob.glob(f"{class_dir}/*.wav"))
+    #         if n_samples == 0:
+    #             raise ValueError(f"No audio .wav files found in {class_dir}. Please check the dataset path.")
+    #         else:
+    #             print(f"Class {class_name} : {n_samples} samples found.")
 
     def setup(self, stage: str | None = None):
        
