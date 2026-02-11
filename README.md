@@ -21,8 +21,8 @@ This repository provides:
 ### 1) Clone the repo 
 
 ```bash
-git clone https://github.com/LilBabines/manatee_sound_detection
-cd manatee_sound_detection/
+git clone XXX
+cd XXX
 ```
 
 ### 2) Create and activate a virtual environment (Python 3.13 used)
