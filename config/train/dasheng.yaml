@@ -1,11 +1,13 @@
 hydra:
   run:
-    dir: outputs/resnet_train_no_pt_with_mixup_lr3
+    dir: runs/dasheng_no_pt
 
 model:
-  name: AudioResnet50
-  num_classes: 2 # lamantin or pas_lamantin
-  pre_trained : False
+  name: Dasheng
+  type : "base"
+  kwargs : {}
+  num_classes: 2 
+  pre_trained : True
   
 
 data:
@@ -15,35 +17,29 @@ data:
   val_sites : [66, 3, 10, 60, 59, 61]
   pred_dir : data/test_set/extraits_1min
   classes : ['pas_lamantin', 'lamantin']
-  batch_size: 32   #######
-  num_workers: 8
-  sample_rate: 44100    #######
-  window: 10    #######
+  batch_size: 32 
+  num_workers: 4
+  sample_rate: 44100 
+  window: 10 
   hop_size: 5    
-  split_ratio: 0.8    # ######
+  split_ratio: 0.8
   mixup: 0.6
-  img_size : [224, 224]
 
 optimizer:
-  name: AdamW
+  name: Adam
   params:
-
-  
-    lr: 1e-3  #######
-
-    
-    weight_decay: 1e-4
+    lr: 1.0e-05
+    weight_decay: 0.0001
 
 trainer:
   _target_: lightning.pytorch.Trainer
   
-  max_epochs: 500 #######
+  max_epochs: 100
   
   accelerator: gpu
   devices: 1
   enable_checkpointing: true
   log_every_n_steps: 10
-  
 
   logger:
     _target_: lightning.pytorch.loggers.TensorBoardLogger

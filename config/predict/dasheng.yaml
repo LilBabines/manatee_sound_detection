@@ -1,0 +1,37 @@
+defaults:
+  - override hydra/job_logging: disabled
+  - override hydra/hydra_logging: disabled
+hydra:
+
+  run:
+    dir: runs/predict/dasheng/${now:%Y-%m-%d_%H-%M-%S}
+  output_subdir: null 
+
+model:
+  name: Dasheng
+  type : "base"
+  checkpoint_path : "runs/dasheng/checkpoints/best.ckpt"
+  kwargs : {}
+      
+  num_classes: 2
+  pre_trained : True
+
+data:
+  
+  pred_dir : data/test_set/extraits_1min
+  classes : ['no_manatee', 'manatee']
+  batch_size: 32   
+  num_workers: 4
+  sample_rate: 44100    
+  window: 10  
+  hop_size: 5
+
+trainer:
+  _target_: lightning.pytorch.Trainer
+  accelerator: gpu
+  devices: 1
+  logger: false
+  enable_checkpointing: false
+  enable_model_summary: false
+  
+seed: 111

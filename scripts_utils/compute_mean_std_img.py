@@ -1,28 +1,18 @@
 import hydra
 from omegaconf import DictConfig
-from hydra.core.hydra_config import HydraConfig
-from pathlib import Path
 
 import lightning.pytorch as pl
 from src.models import get_model
 from src.datasets import AudioDataModule
-from hydra.utils import instantiate
 import torch
 
-import pandas as pd
-from src.utils import compare_csv
 from tqdm import tqdm
-
-
-
-#TODO : add metrics in config
 
 @hydra.main(version_base="1.3", config_path="config", config_name="resnet")
 def main(cfg: DictConfig) -> None:
     pl.seed_everything(cfg.seed)
     torch.set_float32_matmul_precision('medium')
 
-    model = get_model(cfg)
     data_module = AudioDataModule(cfg)
 
     data_module.setup()

@@ -3,54 +3,47 @@ from omegaconf import DictConfig
 from hydra.core.hydra_config import HydraConfig
 from pathlib import Path
 
-import lightning.pytorch as pl
 from src.models import get_model
-from src.datasets import AudioDataModule
+from src.datasets import PredictAudioDataset
+
 from hydra.utils import instantiate
+import lightning.pytorch as pl
 import torch
+from torch.utils.data import DataLoader
+torch.set_float32_matmul_precision('medium')
 
 import pandas as pd
-from src.utils import compare_csv
 
-
-
-#TODO : add metrics in config
-
-@hydra.main(version_base="1.3", config_path="config", config_name="dasheng")
+@hydra.main(version_base="1.3", config_path="config/predict", config_name="dasheng")
 def main(cfg: DictConfig) -> None:
-    pl.seed_everything(cfg.seed)
-    torch.set_float32_matmul_precision('medium')
 
+    print("Initializing model and dataset...    ")
+
+    pl.seed_everything(cfg.seed)
+    
     model = get_model(cfg)
-    data_module = AudioDataModule(cfg)
+    model = model.__class__.load_from_checkpoint(cfg.model.checkpoint_path, cfg=cfg)
+
+    model.eval()
+    model.freeze()
+
+    dataset = PredictAudioDataset(cfg)
+    dataloader = DataLoader(dataset, batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers)
     trainer = instantiate(cfg.trainer)
 
-
-    # trainer.fit(model=model, datamodule=data_module)
-
-    # trainer.validate(model=model, datamodule=data_module, ckpt_path="best")
-
-    metrics = trainer.test(model=model, datamodule=data_module, ckpt_path="dasheng_test_2025-07-30_14-44-28/checkpoints/best.ckpt")
-    probs, preds, targets = model.test_probs, model.test_preds, model.test_targets
-    probs_np   = probs.numpy()
-    preds_np   = preds.numpy()
-    targets_np = targets.numpy()
-    classes_name = ['pas_lamantin','lamantin']
-    # On construit un DataFrame
-    df = pd.DataFrame(probs_np, columns=[classes_name[i] for i in range(probs_np.shape[1])])
-    df["pred"]   = preds_np
-    df["target"] = targets_np
+    print("Running prediction...    ")
     
+
+    predictions = trainer.predict(model=model, dataloaders=dataloader)
+
+    # Aplatir: liste de dicts
+    rows = [row for batch in predictions for row in batch]
+
+    df = pd.DataFrame(rows)
+
     run_dir = Path(HydraConfig.get().runtime.output_dir)
-    df.to_csv(run_dir/"val_predictions.csv", index=False)
+    df.to_csv(run_dir/"predictions.csv", index=False)
 
-
-    predictions = trainer.predict(model=model, datamodule=data_module, ckpt_path="dasheng_test_2025-07-30_14-44-28/checkpoints/best.ckpt")
-
-    df = pd.DataFrame(predictions)
-    
-    run_dir = Path(HydraConfig.get().runtime.output_dir)
-    df.to_csv(run_dir/"test_predictions_test_reprod.csv", index=False)
 
 if __name__ == "__main__":
     main()

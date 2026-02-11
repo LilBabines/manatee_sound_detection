@@ -5,12 +5,9 @@ import torch.nn as nn
 import torch
 import torchvision.models as models
 from hydra.utils import instantiate
-import torchaudio
 
 from typing import Mapping, Any
 import dasheng
-
-import nvtx
 
 
 class BaseModule(LightningModule):
@@ -109,7 +106,7 @@ class BaseModule(LightningModule):
                 "frequency": 1,
                 "monitor": "val_loss",
             },
-        } # type: ignore
+        } 
 
 
 class AudioResnet50(BaseModule):
@@ -118,34 +115,8 @@ class AudioResnet50(BaseModule):
         self.resnet = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1 if cfg.model.pre_trained else None)
         self.resnet.fc = nn.Linear(self.resnet.fc.in_features, cfg.model.num_classes)
 
-    # def load_state_dict(self, state_dict: Mapping[str, Any], assign: bool = False):
-    #     cleaned_dict = {k.replace("resnet.", ""): v for k, v in state_dict.items() if k.startswith("resnet.")}
-    #     self.resnet.load_state_dict(cleaned_dict, strict=False)
-    #     return self
-        
     def forward(self, x: Tensor) -> Tensor:
         return self.resnet(x).sigmoid()
-
-
-class Wav2Vec2(BaseModule):
-    def __init__(self, cfg: DictConfig):
-        super().__init__(cfg)
-        
-        bundle = torchaudio.pipelines.WAV2VEC2_BASE
-        self.encoder = bundle.get_model()
-        self.pool = nn.AdaptiveAvgPool1d(1)  # global mean over time
-        self.classifier = torch.nn.Sequential(torch.nn.LayerNorm(768), torch.nn.Linear(768, 2))
-
-    def forward(self, x):
-        
-        #print(x.shape)  # Debugging line to check input shape
-        features, _ = self.encoder.extract_features(x)
-        
-        x = features[-1]  # dernier niveau
-        x = self.pool(x.transpose(1, 2)).squeeze(-1)  # (batch, 768)
-        return self.classifier(x).sigmoid()
-
-
 
 class Dasheng(BaseModule):
     def __init__(self, cfg: DictConfig,):
@@ -171,23 +142,14 @@ class Dasheng(BaseModule):
         else :
             raise ValueError(f"Unknown Dasheng model type: {cfg.model.type}, only 'base' is supported currently.")
 
-        # if cfg.model.pre_trained :
-        #     self.load_state_from_dasheng(cfg.model.type)
         self.classifier = torch.nn.Sequential(torch.nn.LayerNorm(self.dashengmodel.embed_dim), torch.nn.Linear(self.dashengmodel.embed_dim, 2))
 
-    # def load_state_from_dasheng(self, model_type):
-    #     if model_type=="base":
-    #         check = torch.hub.load_state_dict_from_url('https://zenodo.org/records/13315686/files/dasheng_audioset_mAP497.pt?download=1',map_location='cpu')
-    #     elif model_type=="06B":
-    #         check = torch.hub.load_state_dict_from_url('https://zenodo.org/records/13315686/files/dasheng_06B.pt?download=1',map_location='cpu')
-        
-    #     model.load_state_dict(check)
-    
-    def load_state_dict(self, state_dict: Mapping[str, Any], assign: bool = False, strict=False, from_dasheng = True):
-        # Strip "dashengmodel." prefix
+ 
+    def load_state_dict(self, state_dict: Mapping[str, Any], assign: bool = False, strict=True, from_dasheng = True):
+       
         stripped_state_dict = {k.replace('dashengmodel.', ''): v for k, v in state_dict.items() if k.startswith('dashengmodel.')}
 
-        # Load into dashengmodel
+        
         self.dashengmodel.load_state_dict(stripped_state_dict, strict=strict)
 
         if not from_dasheng :
@@ -195,9 +157,8 @@ class Dasheng(BaseModule):
             # Prepare classifier weights (if any)
             for_classifier_dict = {}
             for k, v in state_dict.items():
-                if 'outputlayer' in k or 'classifier' in k:  # include 'classifier' to cover saved state
+                if 'outputlayer' in k or 'classifier' in k:
                     for_classifier_dict[k.replace('outputlayer.', '').replace('classifier.', '')] = v
-    
             self.classifier.load_state_dict(for_classifier_dict, strict=False)
 
         return self
@@ -218,8 +179,6 @@ def get_model(cfg: DictConfig) :
 
     if cfg.model.name == "AudioResnet50":
         return AudioResnet50(cfg)
-    elif cfg.model.name == "Wav2Vec2":
-        return Wav2Vec2(cfg)
     elif cfg.model.name == "Dasheng":
         return Dasheng(cfg)
     else:
