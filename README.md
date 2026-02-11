@@ -35,11 +35,13 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 3) Dowlaod weights and data
+### 3) Downlaod weights and data
 
 ```
-#TODO add link
+TODO add link
 ```
+Modigy the paths in YAML config files
+
 ------------------------------------------------------------------------
 
 ## 🚀 Usage
