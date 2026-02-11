@@ -7,8 +7,8 @@
 Implementation of a deep learning pipeline for detecting **manatee
 vocalizations** from audio recordings, based on the paper:
 
-> **\[Paper title\]** --- Authors, Year\
-> Link: (optional)
+> **\[Paper title\]** --- Authors, Year
+
 
 This repository provides: 
 - model training : `train.py` 
@@ -35,6 +35,11 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+### 3) Dowlaod weights and data
+
+```
+#TODO add link
+```
 ------------------------------------------------------------------------
 
 ## 🚀 Usage
@@ -68,6 +73,7 @@ python predict.py --config-name=dasheng \
 If you use this code, please cite the original paper:
 
 ``` bibtex
+TODO
 @article{paperkey,
   title={...},
   author={...},
