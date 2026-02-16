@@ -144,25 +144,6 @@ class Dasheng(BaseModule):
 
         self.classifier = torch.nn.Sequential(torch.nn.LayerNorm(self.dashengmodel.embed_dim), torch.nn.Linear(self.dashengmodel.embed_dim, 2))
 
- 
-    def load_state_dict(self, state_dict: Mapping[str, Any], assign: bool = False, strict=True, from_dasheng = True):
-       
-        stripped_state_dict = {k.replace('dashengmodel.', ''): v for k, v in state_dict.items() if k.startswith('dashengmodel.')}
-
-        
-        self.dashengmodel.load_state_dict(stripped_state_dict, strict=strict)
-
-        if not from_dasheng :
-            
-            # Prepare classifier weights (if any)
-            for_classifier_dict = {}
-            for k, v in state_dict.items():
-                if 'outputlayer' in k or 'classifier' in k:
-                    for_classifier_dict[k.replace('outputlayer.', '').replace('classifier.', '')] = v
-            self.classifier.load_state_dict(for_classifier_dict, strict=False)
-
-        return self
-
     def forward(self, x):
         x = self.dashengmodel(x).mean(1)
         return self.classifier(x).sigmoid()
