@@ -1,6 +1,6 @@
 hydra:
   run:
-    dir: runs/resnet_no_pt_test_reprod_score
+    dir: runs/resnet
 
 model:
   name: AudioResnet50
