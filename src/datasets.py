@@ -148,20 +148,20 @@ class AudioDataset(Dataset):
         for i,row in csv_localisation.iterrows():
 
             match row['label']:
-                case 'Lamantin':
-                    dir_type = 'lamantin'
+                case 'manatee':
+                    dir_type = 'manatee'
                     label = 1
                     loc = float(row['localisation'])-float(row['start'])
-                case 'Autre animal':
-                    dir_type = 'autre_animal'
+                case 'other_animal':
+                    dir_type = 'other_animal'
                     label = 0
                     loc = float(row['localisation'])-float(row['start'])
-                case 'Noise':
-                    dir_type = 'autre_animal'
+                case 'noise':
+                    dir_type = 'other_animal'
                     label = 0
                     loc = float(row['localisation'])-float(row['start'])
-                case 'Negatif':
-                    dir_type = 'pas_lamantin'
+                case 'negative':
+                    dir_type = 'no_manatee'
                     label = 0
                     loc = -1
             self.data_path.append(os.path.join(self.data_path_dir,dir_type,row['nom_fichier']))
@@ -250,14 +250,14 @@ class AudioDataset(Dataset):
     ):
         """
         Sauve des PNG interprétables (turbo) à partir du spectrogramme en dB.
-        - n_sample//2 pour label=1 (Lamantin)
-        - le reste pour label=0 (négatif)
+        - n_sample//2 pour label=1 (manatee)
+        - le reste pour label=0 (negative)
         - Resize 224x224
         - Pas de Normalize
         """
         out_dir = Path(out_dir)
-        (out_dir / "lamantin").mkdir(parents=True, exist_ok=True)
-        (out_dir / "negatif").mkdir(parents=True, exist_ok=True)
+        (out_dir / "manatee").mkdir(parents=True, exist_ok=True)
+        (out_dir / "negative").mkdir(parents=True, exist_ok=True)
 
         # combien par classe
         n_pos = n_sample // 2
@@ -398,13 +398,13 @@ class AudioDataset(Dataset):
                 loc = self.loc[int(idx)]
 
                 fname = f"{class_name}_idx{int(idx)}_y{label}_loc{loc:.3f}_{stem}.png"
-                fpath = out_dir / ("lamantin" if label == 1 else "negatif") / fname
+                fpath = out_dir / ("manatee" if label == 1 else "negative") / fname
 
                 _waveform_to_png_with_axes(wav, fpath)
                 saved.append(str(fpath))
 
-        _save_indices(pick_pos, "lamantin")
-        _save_indices(pick_neg, "negatif")
+        _save_indices(pick_pos, "manatee")
+        _save_indices(pick_neg, "negative")
 
         return saved
         
@@ -530,8 +530,8 @@ class BenchMarkAthena(Dataset):
         self.mv_data_path = []
         self.noise_data_path = []
         
-        for files in os.listdir(os.path.join(self.data_path_dir,'Noise')):
-                self.noise_data_path.append(os.path.join(self.data_path_dir,'Noise',files))
+        for files in os.listdir(os.path.join(self.data_path_dir,'noise')):
+                self.noise_data_path.append(os.path.join(self.data_path_dir,'noise',files))
               
 
         for files in os.listdir(os.path.join(self.data_path_dir,'MV')):
@@ -645,3 +645,4 @@ class AudioDataModule(LightningDataModule):
             return x, y
         else : 
             return batch
+
