@@ -10,11 +10,11 @@ model:
 
 data:
   
-  path_dir: data/training_set/extraits_unique_1min
+  path_dir: data/training_set/extracts_unique_1min
   path_csv : data/training_set/training_set_all_deep_corrected.csv
   val_sites : [66, 3, 10, 60, 59, 61]
-  pred_dir : data/test_set/extraits_1min
-  classes : ['pas_lamantin', 'lamantin']
+  pred_dir : data/test_set/extracts_1min
+  classes : ['no_manatee', 'manatee']
   batch_size: 32   
   num_workers: 8
   sample_rate: 44100    
@@ -63,5 +63,6 @@ scheduler:
   patience: 15
   factor: 0.2
   eps: 1e-9
+
 
 seed: 111
