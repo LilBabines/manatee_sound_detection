@@ -8,15 +8,15 @@ hydra:
 
 model:
   name: AudioResnet50
-  num_classes: 2 # lamantin or pas_lamantin
+  num_classes: 2 # manatee or no_manatee
   checkpoint_path: "runs/resnet/checkpoints/best.ckpt"
   pre_trained : True
   
 
 data:
   
-  pred_dir : data/test_set/extraits_1min
-  classes : ['pas_lamantin', 'lamantin']
+  pred_dir : data/test_set/extracts_1min
+  classes : ['no_manatee', 'manatee']
   batch_size: 32   #######
   num_workers: 4
   sample_rate: 44100    #######
@@ -32,5 +32,6 @@ trainer:
   logger: false
   enable_checkpointing: false
   enable_model_summary: false
+
 
 seed: 111
