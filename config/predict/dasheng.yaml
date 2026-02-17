@@ -18,7 +18,7 @@ model:
 
 data:
   
-  pred_dir : data/test_set/extraits_1min
+  pred_dir : data/test_set/extracts_1min
   classes : ['no_manatee', 'manatee']
   batch_size: 32   
   num_workers: 4
@@ -34,4 +34,5 @@ trainer:
   enable_checkpointing: false
   enable_model_summary: false
   
+
 seed: 111
