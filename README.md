@@ -7,7 +7,7 @@
 Implementation of a deep learning pipeline for detecting **manatee
 vocalizations** from audio recordings, based on the paper:
 
-> **\[Few annotations, high accuracy: transfer learning and data augmentation improve passive acoustic monitoring of the vulnerable African manatee\]** --- Authors, Year
+> **\Few annotations, high accuracy: transfer learning and data augmentation improve passive acoustic monitoring of the vulnerable African manatee\** --- : Lucas Dubus, Auguste Verdier, Nina Giotto, Grace Mbemba, Gabriel Michelin, Baptiste Mulot, Stéphanie Manel, David Mouillot, 2026
 
 
 This repository provides: 
