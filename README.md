@@ -77,11 +77,13 @@ To evaluate the model performance on the independent test set, run the following
 1. `evaluation_prediction_step1.ipynb`
 2. `evaluation_prediction_step2.R`
 
-These scripts require the test set annotations available on Zenodo : test_set_annotation.zip 
-Make sure the following files are available and correctly linked in the scripts: 
-test_set_all_deep.csv
-predictions.csv
-predictions_results.csv
+These scripts require the test set annotations available on Zenodo: `test_set_annotation.zip`
+
+Make sure the following files are available and correctly linked in the scripts:
+
+- `test_set_all_deep.csv`
+- `predictions.csv`
+- `predictions_results.csv`
 
 ### Kaleidoscope evaluation
 To reproduce the results obtained with Kaleidoscope in Dubus et al. (in prep), download the advanced classifier output from the Zenodo repository : kaleidoscope_classification_trained_with_full_dataset.zip
