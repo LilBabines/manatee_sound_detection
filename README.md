@@ -65,7 +65,7 @@ All hyperparameters are configurable via the YAML files located in `cfg/train/`.
 python predict.py --config-name=dasheng \
     hydra.run.dir=runs/predict/dasheng_predict_custom \
     model.checkpoint_path=runs/dasheng/checkpoints/best.ckpt \
-    data.pred_dir=data/test_set/extraits_1min
+    data.pred_dir=data/test_set/extracts_1min
 ```
 
 ------------------------------------------------------------------------
