@@ -1,6 +1,3 @@
-# Install
-!pip install pandas
-
 # Imports
 import pandas as pd
 import numpy as np
