@@ -86,9 +86,15 @@ Make sure the following files are available and correctly linked in the scripts:
 - `predictions_results.csv`
 
 ### Kaleidoscope evaluation
-To reproduce the results obtained with Kaleidoscope in Dubus et al. (in prep), download the advanced classifier output from the Zenodo repository : kaleidoscope_classification_trained_with_full_dataset.zip
-Then run the following script: 'evaluation_prediction_kaleidoscope.R' 
+To reproduce the results obtained with Kaleidoscope in Dubus et al. (_in prep._), download the advanced classifier output from the Zenodo repository: `kaleidoscope_classification_trained_with_full_dataset.zip`
+
+Then run the following script:
+
+```bash
+evaluation_prediction_kaleidoscope.R
+
 Before running the script, update the file paths if necessary so that they correctly point to:
+
 cluster.csv
 predictions_results.csv
 
