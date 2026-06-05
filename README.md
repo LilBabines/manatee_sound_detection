@@ -39,8 +39,8 @@ pip install -r requirements.txt
 
 ```
 Go to Zenodo repository : https://doi.org/10.5281/zenodo.20555275
-And download data (training set and annotation, and testing set), runs (weights), test_set_annotation (test annotation), and if needed kaleidoscope_classification_trained_with_full_dataset
 ```
+Download data (training set and annotation, and testing set), runs (weights), test_set_annotation (test annotation), and if needed kaleidoscope_classification_trained_with_full_dataset
 If necessary, modify the paths in YAML config files
 
 ------------------------------------------------------------------------
