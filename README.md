@@ -94,8 +94,8 @@ evaluation_prediction_kaleidoscope.R
 
 Before running the script, update the file paths if necessary so that they correctly point to:
 
-cluster.csv
-predictions_results.csv
+- 'cluster.csv'
+- 'predictions_results.csv'
 
 ------------------------------------------------------------------------
 
