@@ -90,7 +90,6 @@ To reproduce the results obtained with Kaleidoscope in Dubus et al. (_in prep._)
 
 Then run the following script:
 
-```bash
 evaluation_prediction_kaleidoscope.R
 
 Before running the script, update the file paths if necessary so that they correctly point to:
