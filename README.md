@@ -76,12 +76,11 @@ python predict.py --config-name=dasheng \
 If you use this code, please cite the original paper:
 
 ``` bibtex
-TODO
-@article{paperkey,
-  title={...},
-  author={...},
-  journal={...},
-  year={...}
+@article{dubus_inprep_manatee,
+  title={Few annotations, high accuracy: transfer learning and data augmentation improve passive acoustic monitoring of the vulnerable African manatee},
+  author={Dubus, Lucas and Verdier, Auguste and Giotto, Nina and Mbemba, Grace and Michelin, Gabriel and Mulot, Baptiste and Manel, Stéphanie and Mouillot, David},
+  journal={Remote Sensing in Ecology and Conservation},
+  year={in prep}
 }
 ```
 
@@ -90,3 +89,11 @@ TODO
 ## 📜 License
 
 This project is released under the **MIT License**.
+
+This license applies to the source code in this GitHub repository. You are free to use, modify, and redistribute the code, provided that the original copyright notice and license are included.
+
+If you use this code, the associated models, or the datasets in academic work, publications, reports, or derivative research, you are required to cite the associated paper and the Zenodo dataset.
+
+The annotated training and test datasets associated with this project are available on Zenodo and are distributed under the license specified there : https://doi.org/10.5281/zenodo.20555275
+
+The code is provided without warranty.
