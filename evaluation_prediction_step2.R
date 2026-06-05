@@ -1,6 +1,6 @@
 library(tidyr)
 
-df = read.csv("runs/predictions_results.csv")[-1]
+df = read.csv("runs/predictions_results.csv")[-1] #ADJUST predictions_results.csv FOLDER
 subtest=subset(df,subsample=="yes")
 subtest$label=NA
 subtest$label[subtest$Manual_ID=="manatee"] = 1
