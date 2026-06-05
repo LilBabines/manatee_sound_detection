@@ -7,7 +7,7 @@
 Implementation of a deep learning pipeline for detecting **manatee
 vocalizations** from audio recordings, based on the paper:
 
-> **\[Paper title\]** --- Authors, Year
+> **\[Few annotations, high accuracy: transfer learning and data augmentation improve passive acoustic monitoring of the vulnerable African manatee\]** --- Authors, Year
 
 
 This repository provides: 
@@ -38,9 +38,10 @@ pip install -r requirements.txt
 ### 3) Download weights and data
 
 ```
-TODO add link
+Go to Zenodo repository : https://doi.org/10.5281/zenodo.20555275
+And download data (training set and annotation, and testing set), runs (weights), test_set_annotation (test annotation), and if needed kaleidoscope_classification_trained_with_full_dataset
 ```
-Modify the paths in YAML config files
+If necessary, modify the paths in YAML config files
 
 ------------------------------------------------------------------------
 
