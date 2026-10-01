@@ -104,7 +104,7 @@ Before running the script, update the file paths if necessary so that they corre
 If you use this code, please cite the original paper:
 
 ``` bibtex
-@article{
+@article{dubus_2026_manatee_deep,
   title={Few annotations, high accuracy: transfer learning and data augmentation improve passive acoustic monitoring of the vulnerable African manatee},
   author={Dubus, Lucas and Verdier, Auguste and Giotto, Nina and Mbemba, Grace and Michelin, Gabriel and Mulot, Baptiste and Manel, Stéphanie and Mouillot, David},
   journal={Remote Sensing in Ecology and Conservation},
